@@ -1,4 +1,16 @@
 // クライアントサイド簡易レコメンド
+
+const TAG_COLORS = [
+  {bg:"#FFE4E6", ink:"#7A1F3D"}, // ピンク
+  {bg:"#E0F2FE", ink:"#0B4A6F"}, // 水色
+  {bg:"#FDE68A", ink:"#7A4E00"}, // イエロー
+  {bg:"#E9D5FF", ink:"#4A2876"}, // パープル
+  {bg:"#DCFCE7", ink:"#0A5B3E"}, // グリーン
+  {bg:"#FFEDD5", ink:"#7A3E00"}, // オレンジ
+  {bg:"#F1F5F9", ink:"#0f172a"}, // グレー
+  {bg:"#F5D0FE", ink:"#6b21a8"}  // ライラック
+];
+
 const TAGS = [
   { key: "むくみ対策", tokens: ["むくみ","血流","ふくらはぎ","足首"] },
   { key: "猫背矯正", tokens: ["猫背","姿勢","前傾","肩甲骨"] },
@@ -42,12 +54,25 @@ async function loadData() {
 function renderTags() {
   const wrap = document.getElementById("tags");
   wrap.innerHTML = "";
-  TAGS.forEach(tag => {
+  TAGS.forEach((tag, idx) => {
     const el = document.createElement("button");
     el.className = "tag";
     el.textContent = tag.key;
+    const c = TAG_COLORS[idx % TAG_COLORS.length];
+    el.style.background = c.bg;
+    el.style.color = c.ink;
+    el.style.borderColor = "rgba(0,0,0,.06)";
     el.onclick = () => {
       el.classList.toggle("active");
+      if (el.classList.contains("active")) {
+        el.style.background = "#ff3d71";
+        el.style.color = "#fff";
+        el.style.borderColor = "transparent";
+      } else {
+        el.style.background = c.bg;
+        el.style.color = c.ink;
+        el.style.borderColor = "rgba(0,0,0,.06)";
+      }
       search();
     };
     wrap.appendChild(el);
