@@ -51,7 +51,19 @@
     .tag.active{outline:3px solid rgba(255,61,113,.35); border-color:transparent; background:var(--primary); color:var(--primary-ink)}
     .chiprow{display:flex;flex-wrap:wrap;gap:8px}
     .pill{display:inline-flex;gap:6px;align-items:center;padding:6px 10px;border-radius:999px;background:#fff;border:2px solid var(--border);font-size:12px}
-  </style>
+  
+    /* 説明文の整列（行数を揃えて省略） */
+    .desc{
+      font-size:14px; line-height:1.65; color:var(--muted);
+      margin:0;
+      display:-webkit-box; -webkit-box-orient:vertical;
+      -webkit-line-clamp:3; overflow:hidden;
+    }
+    /* 補助: 箇条書きの余白を詰めて高さブレを抑える（必要に応じて非表示可） */
+    .compact-list{margin:0; padding-left:18px}
+    .compact-list li{margin:0 0 4px 0}
+    </style>
+        
 </head>
 <body>
   <header>

@@ -121,16 +121,17 @@ function renderResults(list, q) {
     return;
   }
   list.forEach(item => {
-    const pros = (item.pros || []).map(x => `<li>${x}</li>`).join("");
-    const cons = (item.cons || []).map(x => `<li>${x}</li>`).join("");
+    const prosList = (item.pros || []);
+    const consList = (item.cons || []);
+    const summary = (prosList.length ? prosList.slice(0,4).join("・") : (item.use_case||[]).join(" / ")) || "";
+    const pros = prosList.map(x => `<li>${x}</li>`).join("");
+    const cons = consList.map(x => `<li>${x}</li>`).join("");
     const card = document.createElement("div");
     card.className = "card";
     card.innerHTML = `
       <h3>${item.name}</h3>
       <div class="muted">${item.brand}</div>
-      <div><strong>こんな人向け：</strong> ${ (item.use_case || []).join(" / ") }</div>
-      <div><strong>推す理由：</strong><ul>${pros}</ul></div>
-      <div><strong>注意点：</strong><ul>${cons}</ul></div>
+      <p class="desc">${summary}</p>
       <div><a class="btn" href="${item.affiliate_url}" target="_blank" rel="noopener">ストアで見る</a></div>
     `;
     wrap.appendChild(card);
@@ -196,14 +197,13 @@ function renderRecommendations(baseList, excludeNames = []) {
   }
   document.getElementById("reco").style.display = "block";
   list.forEach(item => {
-    const pros = (item.pros || []).map(x => `<li>${x}</li>`).join("");
-    const cons = (item.cons || []).map(x => `<li>${x}</li>`).join("");
+    const summary = ((item.pros||[]).slice(0,3).join("・")) || ((item.use_case||[]).join(" / "));
     const card = document.createElement("div");
     card.className = "card";
     card.innerHTML = `
       <h3>${item.name}</h3>
       <div class="muted">${item.brand} ・ ${(item.tags||[]).join(" / ")}</div>
-      <div><strong>推す理由：</strong><ul>${pros}</ul></div>
+      <p class="desc">${summary}</p>
       <div><a class="btn" href="${item.affiliate_url}" target="_blank" rel="noopener">ストアで見る</a></div>
     `;
     wrap.appendChild(card);
