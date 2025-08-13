@@ -85,6 +85,7 @@ function search() {
     .slice(0, 12)
     .map(({p}) => p);
   renderResults(results, q);
+  renderRecommendations(results, results.map(r => r.name));
 }
 
 function renderResults(list, q) {
@@ -135,3 +136,51 @@ loadData().catch(err => {
   console.error(err);
   document.getElementById("results").innerHTML = "<div class='card'>データの読み込みに失敗しました。再読み込みしてください。</div>";
 });
+
+
+
+// -------- 推薦（AI風）: クエリやタグから関連商品を提示 --------
+function mostCommonTag(items) {
+  const counts = {};
+  items.forEach(p => (p.tags || []).forEach(t => counts[t] = (counts[t]||0)+1));
+  let best = null, bestCount = 0;
+  Object.entries(counts).forEach(([t,c]) => { if (c>bestCount) { best=t; bestCount=c; } });
+  return best;
+}
+
+function renderRecommendations(baseList, excludeNames = []) {
+  const wrap = document.getElementById("recoList");
+  wrap.innerHTML = "";
+  if (!PRODUCTS.length) return;
+
+  // 1) ベースの一覧から最頻タグを抽出
+  const tag = mostCommonTag(baseList);
+  let pool = PRODUCTS.filter(p => (p.tags || []).includes(tag));
+  if (!pool.length) {
+    // 2) タグがなければ「静音」「姿勢矯正」などの意図を拾う
+    const fallbackTokens = ["静音","姿勢","足置き","ヒーター","スタンド","加湿"];
+    pool = PRODUCTS.filter(p => fallbackTokens.some(t => (p.name + " " + (p.keywords||[]).join(" ")).includes(t)));
+  }
+  // 除外・重複排除
+  pool = pool.filter(p => !excludeNames.includes(p.name));
+  // 上位12件
+  const list = pool.slice(0, 12);
+  if (!list.length) {
+    document.getElementById("reco").style.display = "none";
+    return;
+  }
+  document.getElementById("reco").style.display = "block";
+  list.forEach(item => {
+    const pros = (item.pros || []).map(x => `<li>${x}</li>`).join("");
+    const cons = (item.cons || []).map(x => `<li>${x}</li>`).join("");
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <h3>${item.name}</h3>
+      <div class="muted">${item.brand} ・ ${(item.tags||[]).join(" / ")}</div>
+      <div><strong>推す理由：</strong><ul>${pros}</ul></div>
+      <div><a class="btn" href="${item.affiliate_url}" target="_blank" rel="noopener">ストアで見る</a></div>
+    `;
+    wrap.appendChild(card);
+  });
+}
