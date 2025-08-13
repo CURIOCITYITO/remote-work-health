@@ -62,7 +62,23 @@
     /* 補助: 箇条書きの余白を詰めて高さブレを抑える（必要に応じて非表示可） */
     .compact-list{margin:0; padding-left:18px}
     .compact-list li{margin:0 0 4px 0}
+    
+    /* サムネイル */
+    .thumb {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 14px;
+      object-fit: cover;
+      border: 2px solid var(--border);
+      background: #f8fafc;
+    }
+    .thumb-wrap {
+      position: relative;
+      overflow: hidden;
+      border-radius: 16px;
+    }
     </style>
+        
         
 </head>
 <body>

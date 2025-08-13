@@ -29,6 +29,25 @@ const INTENT_WEIGHTS = {
 };
 
 let PRODUCTS = [];
+
+// 生成型プレースホルダー（SVG）
+function placeholderDataURL(title) {
+  const t = (title || "Item").slice(0, 16);
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='800' height='450'>
+  <defs>
+    <linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>
+      <stop offset='0%' stop-color='#ffe4e6'/>
+      <stop offset='100%' stop-color='#e9d5ff'/>
+    </linearGradient>
+  </defs>
+  <rect width='100%' height='100%' fill='url(#g)'/>
+  <text x='50%' y='52%' dominant-baseline='middle' text-anchor='middle'
+        font-family='-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Noto Sans JP,Hiragino Kaku Gothic ProN,Meiryo,sans-serif'
+        font-size='36' fill='#0f172a' opacity='0.9'>${t}</text>
+</svg>`;
+  return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+}
+
 let FAQS = [];
 
 function tokenize(text) {
@@ -129,6 +148,8 @@ function renderResults(list, q) {
     const card = document.createElement("div");
     card.className = "card";
     card.innerHTML = `
+      <div class='thumb-wrap'><img class='thumb' src='${item.image ? item.image : placeholderDataURL(item.name)}' alt='${item.name}'></div>
+      <div class='thumb-wrap'><img class='thumb' src='${item.image ? item.image : placeholderDataURL(item.name)}' alt='${item.name}'></div>
       <h3>${item.name}</h3>
       <div class="muted">${item.brand}</div>
       <p class="desc">${summary}</p>
@@ -201,6 +222,8 @@ function renderRecommendations(baseList, excludeNames = []) {
     const card = document.createElement("div");
     card.className = "card";
     card.innerHTML = `
+      <div class='thumb-wrap'><img class='thumb' src='${item.image ? item.image : placeholderDataURL(item.name)}' alt='${item.name}'></div>
+      <div class='thumb-wrap'><img class='thumb' src='${item.image ? item.image : placeholderDataURL(item.name)}' alt='${item.name}'></div>
       <h3>${item.name}</h3>
       <div class="muted">${item.brand} ・ ${(item.tags||[]).join(" / ")}</div>
       <p class="desc">${summary}</p>
